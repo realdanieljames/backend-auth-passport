@@ -1,4 +1,4 @@
-// import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Button } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
@@ -7,7 +7,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import useChangeInputConfig from "./hooks/useAuth";
 import useFetchAPI from "./hooks/useFetchAPI";
-import useAlertMessage from "./hooks/useAlertMessage";
+import { AuthContext } from "./context/AuthContext";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -16,18 +16,24 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-
-//=====================================================================================//
-//=====================================================================================//
 export default function Auth(props) {
+  const {
+    state: { user },
+  } = useContext(AuthContext);
+  useEffect(() => {
+    if (user) {
+      props.history.push("/home");
+    }
+  }, [user]);
   let isLogin = props.match.path === "/login";
   let buttonTitle = isLogin ? "Login" : "Sign up";
   let apiURL = isLogin ? "/users/login" : "/users/sign-up";
-  const [toggle,  handleMessageClose] = useAlertMessage();
   const [
     { isLoading, response, error },
     handleAPICallButtonSubmit,
+    toggle,
+    ,
+    handleMessageClose,
   ] = useFetchAPI(apiURL);
   const classes = useStyles();
   const [
@@ -47,17 +53,13 @@ export default function Auth(props) {
     clearPasswordInput,
   ] = useChangeInputConfig("password");
   const [
-    username, 
+    username,
     handleUsernameChange,
     isUsernameError,
     usernameErrorMessage,
     canUsernameSubmit,
     clearUsernameInput,
   ] = useChangeInputConfig("username");
-
-
-  //=====================================================================================//
-  //=====================================================================================//
   function handleSubmit(e) {
     e.preventDefault();
     const user = isLogin ? { email, password } : { email, username, password };
@@ -71,23 +73,16 @@ export default function Auth(props) {
     clearUsernameInput();
     clearPasswordInput();
   }
-
-  //=====================================================================================//
-  //=====================================================================================//
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
-
-  //=====================================================================================// 
-  //=====================================================================================//
-
   function successMessage() {
     return (
       <Snackbar
         open={toggle}
         autoHideDuration={6000}
         onClose={handleMessageClose}
-        // style={{ transform: "translateY(-500px)" }}
+        style={{ transform: "translateY(-500px)" }}
       >
         <Alert onClose={handleMessageClose} severity="success">
           {response}
@@ -95,28 +90,20 @@ export default function Auth(props) {
       </Snackbar>
     );
   }
-  //=====================================================================================//
-  //=====================================================================================//
-
   function errorMessage() {
-
     return (
       <Snackbar
         open={toggle}
         autoHideDuration={6000}
         onClose={handleMessageClose}
-        // style={{ transform: "translateY(-500px)" }}
+        style={{ transform: "translateY(-500px)" }}
       >
         <Alert onClose={handleMessageClose} severity="error">
-          {response}
+          {error}
         </Alert>
       </Snackbar>
     );
-
   }
-  //=====================================================================================//
-  //=====================================================================================//
-
   if (isLoading) {
     return (
       <div style={{ textAlign: "center" }}>
@@ -124,10 +111,6 @@ export default function Auth(props) {
       </div>
     );
   }
-
-  //=====================================================================================//
-  //=====================================================================================//
-  
   return (
     <Grid container spacing={0} justify="center">
       {response && successMessage()}

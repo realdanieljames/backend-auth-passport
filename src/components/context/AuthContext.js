@@ -12,7 +12,7 @@ function reducer(state, action) {
         case "LOGIN":
             return {
                 user: {
-                    email: "hamster@123.com",
+                    email: action.user.email,
                     isAuth: true,
                 },
             }
