@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 
+import useLocalStorage from "./useLocalStorage"
 
+import {AuthContext} from "../context/AuthContext";
 
 
   //=====================================================================================//
@@ -17,7 +19,14 @@ function useFetchAPI(url) {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [options, setOptions] = useState({});
-  const [isMessageOpen, setIsMessageOpen] = useState(true);
+  const [isMessageOpen, setIsMessageOpen] = useState(false);
+
+
+  const[jwtToken, setJwtToken]= useLocalStorage("jwtToken");
+
+  const {dispatch } = useContext(AuthContext);
+
+
 
 
   //=====================================================================================//
@@ -59,8 +68,15 @@ function useFetchAPI(url) {
     try {
       handleMessageOpen();
       let response = await axios(baseURL + url, requestOptionObj);
-      //console.log(response);
-      setResponse(response.data.message);
+    
+
+      if(response.data.jwtToken){
+          setJwtToken(response.data.jwtToken);
+          dispatch({
+              type: "LOGIN",
+          });
+      }
+      setResponse(response.data.message)
       setIsLoading(false);
     } catch (e) {
       //console.log(e.response.data.message);
