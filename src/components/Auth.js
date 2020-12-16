@@ -16,6 +16,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+
+//=====================================================================================//
+//=====================================================================================//
 export default function Auth(props) {
   let isLogin = props.match.path === "/login";
   let buttonTitle = isLogin ? "Login" : "Sign up";
@@ -50,6 +54,10 @@ export default function Auth(props) {
     canUsernameSubmit,
     clearUsernameInput,
   ] = useChangeInputConfig("username");
+
+
+  //=====================================================================================//
+  //=====================================================================================//
   function handleSubmit(e) {
     e.preventDefault();
     const user = isLogin ? { email, password } : { email, username, password };
@@ -63,16 +71,23 @@ export default function Auth(props) {
     clearUsernameInput();
     clearPasswordInput();
   }
+
+  //=====================================================================================//
+  //=====================================================================================//
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
+
+  //=====================================================================================// 
+  //=====================================================================================//
+
   function successMessage() {
     return (
       <Snackbar
         open={toggle}
         autoHideDuration={6000}
         onClose={handleMessageClose}
-        style={{ transform: "translateY(-500px)" }}
+        // style={{ transform: "translateY(-500px)" }}
       >
         <Alert onClose={handleMessageClose} severity="success">
           {response}
@@ -80,7 +95,28 @@ export default function Auth(props) {
       </Snackbar>
     );
   }
-  function errorMessage() {}
+  //=====================================================================================//
+  //=====================================================================================//
+
+  function errorMessage() {
+    console.log(error)
+    return (
+      <Snackbar
+        open={toggle}
+        autoHideDuration={6000}
+        onClose={handleMessageClose}
+        // style={{ transform: "translateY(-500px)" }}
+      >
+        <Alert onClose={handleMessageClose} severity="error">
+          {response}
+        </Alert>
+      </Snackbar>
+    );
+
+  }
+  //=====================================================================================//
+  //=====================================================================================//
+
   if (isLoading) {
     return (
       <div style={{ textAlign: "center" }}>
@@ -88,9 +124,14 @@ export default function Auth(props) {
       </div>
     );
   }
+
+  //=====================================================================================//
+  //=====================================================================================//
+  
   return (
     <Grid container spacing={0} justify="center">
       {response && successMessage()}
+      {error && errorMessage()}
       <form className={classes.root} onSubmit={handleSubmit}>
         <Grid item m={6}>
           <TextField

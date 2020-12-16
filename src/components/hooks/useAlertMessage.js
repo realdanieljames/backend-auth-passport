@@ -6,7 +6,7 @@ import { useState } from "react";
 function useAlertMessage() {
     const [isMessageOpen, setIsMessageOpen] = useState(true);
 
-
+    
     function handleMessageOpen() {
         setIsMessageOpen(true)
     }
