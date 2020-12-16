@@ -99,7 +99,7 @@ export default function Auth(props) {
   //=====================================================================================//
 
   function errorMessage() {
-    console.log(error)
+
     return (
       <Snackbar
         open={toggle}

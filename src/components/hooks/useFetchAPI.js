@@ -69,6 +69,7 @@ function useFetchAPI(url) {
       handleMessageOpen();
       let response = await axios(baseURL + url, requestOptionObj);
     
+    
 
       if(response.data.jwtToken){
           setJwtToken(response.data.jwtToken);
@@ -76,10 +77,11 @@ function useFetchAPI(url) {
               type: "LOGIN",
           });
       }
+
       setResponse(response.data.message)
       setIsLoading(false);
     } catch (e) {
-      //console.log(e.response.data.message);
+
       setError(e.response.data.message);
       setIsLoading(false);
     }

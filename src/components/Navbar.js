@@ -37,7 +37,7 @@ const{
 const isUserLoggedIn = user ? true : false;
 
 const navLinkTitleOne =  isUserLoggedIn ? "/profile" : "/login";
-const navLinkDisplayOne =  isUserLoggedIn ? "Profile" : "Login";
+const navLinkDisplayOne =  isUserLoggedIn ? `${user.email}` : "Login";
 
 const navLinkTitleTwo =  isUserLoggedIn ? "/logout" : "/sign-up";
 const navLinkDisplayTwo =  isUserLoggedIn ? "Logout" : "Sign up";
@@ -57,6 +57,11 @@ return (
         <Typography variant="h6" className={classes.title}>
             <Link to="/">React Auth Fullstack</Link>
         </Typography>
+
+
+
+
+
         <NavLink activeStyle={{ color: "red" }} exact to={navLinkTitleOne}>
             <Button color="inherit" style={{ color: "white" }}>
             {navLinkDisplayOne}
